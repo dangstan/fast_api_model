@@ -1,9 +1,11 @@
-import numpy as np
-from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from joblib import dump, load
+import json
 
 
 def process_data(
-    X, categorical_features=[], label=None, training=True, encoder=None, lb=None
+    X, training=False
 ):
     """ Process the data used in the machine learning pipeline.
 
@@ -34,37 +36,41 @@ def process_data(
     -------
     X : np.array
         Processed data.
-    y : np.array
-        Processed labels if labeled=True, otherwise empty np.array.
-    encoder : sklearn.preprocessing._encoders.OneHotEncoder
-        Trained OneHotEncoder if training is True, otherwise returns the encoder passed
-        in.
-    lb : sklearn.preprocessing._label.LabelBinarizer
-        Trained LabelBinarizer if training is True, otherwise returns the binarizer
-        passed in.
     """
 
-    if label is not None:
-        y = X[label]
-        X = X.drop([label], axis=1)
-    else:
-        y = np.array([])
+    cat_ft = json.load(open('cat_ft.json'))
+    num_ft = json.load(open('num_ft.json'))
 
-    X_categorical = X[categorical_features].values
-    X_continuous = X.drop(*[categorical_features], axis=1)
+    X['sex']=X['sex'].map({' Male':1,' Female':0})
 
     if training is True:
-        encoder = OneHotEncoder(sparse=False, handle_unknown="ignore")
-        lb = LabelBinarizer()
-        X_categorical = encoder.fit_transform(X_categorical)
-        y = lb.fit_transform(y.values).ravel()
-    else:
-        X_categorical = encoder.transform(X_categorical)
-        try:
-            y = lb.transform(y.values).ravel()
-        # Catch the case where y is None because we're doing inference.
-        except AttributeError:
-            pass
 
-    X = np.concatenate([X_continuous, X_categorical], axis=1)
-    return X, y, encoder, lb
+        scaler = StandardScaler()
+        for col in num_ft:
+            X[col] = scaler.fit_transform(X[[col]])
+            dump(scaler, 'std_scalers/'+col+'_std_scaler.bin', compress=True)
+
+        X = X[(X['capital-gain']<28000) & (X['capital-loss']<2800)]
+        X = X[~((X['workclass']==' ?') | (X['occupation']==' ?') | (X['native-country']==' ?'))]
+        
+        dummies = pd.get_dummies(X.loc[:,cat_ft])
+        X = pd.concat([X,dummies],axis=1)
+        X = X.drop(columns=cat_ft)
+        
+        with open('dummies.json', 'w') as f:
+            json.dump(dummies.columns.tolist(), f)
+
+    else:
+
+        for col in num_ft:
+            load(scaler, 'std_scalers/'+col+'_std_scaler.bin')
+            X[col] = scaler.transform(X[[col]])
+
+        dumm_cols = json.load(open('dummies.json'))
+        new_d = pd.get_dummies(X.loc[:,cat_ft])
+        new_d = new_d[new_d.columns[new_d.columns.isin(dumm_cols)]]
+        X = pd.concat([X,new_d],axis=1)
+        X[X.columns[~X.columns.isin(dumm_cols)]] = 0
+
+
+    return X

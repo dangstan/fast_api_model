@@ -1,28 +1,33 @@
 # Script to train machine learning model.
 
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+from imblearn.over_sampling import BorderlineSMOTE
+import pandas as pd
+from ml.model import *
 
-# Add the necessary imports for the starter code.
+data = pd.read_csv('../data/census.csv')
 
-# Add code to load in the data.
+y = data.pop('salary')
 
-# Optional enhancement, use K-fold cross validation instead of a train-test split.
-train, test = train_test_split(data, test_size=0.20)
+y= y.map({' >50K':1,' <=50K':0})
 
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
-X_train, y_train, encoder, lb = process_data(
-    train, categorical_features=cat_features, label="salary", training=True
-)
+kf = KFold(5,shuffle=True)
 
-# Proces the test data with the process_data function.
+model = [None,0.0]
 
-# Train and save a model.
+for train_idx, test_idx in kf.split(data):
+
+    X_train, X_test = data[train_idx],data[test_idx]
+    y_train, y_test = y[train_idx],y[test_idx]
+
+    oversample = BorderlineSMOTE()
+    X_train,y_train = oversample.fit_resample(X_train,y_train)
+
+    xgboost = train_model(X_train,y_train)
+    score = compute_model_metrics(y_test,inference(X_test))[-1]
+
+    if score>model[1]:
+        model = [xgboost,score]
+
+
+model[0].save_model("data/xgb_model.pkl")

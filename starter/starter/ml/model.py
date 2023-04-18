@@ -1,4 +1,6 @@
 from sklearn.metrics import fbeta_score, precision_score, recall_score
+from xgboost import XGBClassifier
+from ml.data import process_data
 
 
 # Optional: implement hyperparameter tuning.
@@ -18,7 +20,14 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
 
-    pass
+    X_train = process_data(X_train, training=True)
+
+    xgb = XGBClassifier()
+
+    xgb.fit(X_train,y_train)
+
+    return xgb
+
 
 
 def compute_model_metrics(y, preds):
@@ -48,7 +57,7 @@ def inference(model, X):
 
     Inputs
     ------
-    model : ???
+    model : XGBClassifier
         Trained machine learning model.
     X : np.array
         Data used for prediction.
@@ -57,4 +66,8 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    pass
+
+    X = process_data(X)
+    return model.predict(X)
+
+    
