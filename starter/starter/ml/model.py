@@ -20,8 +20,6 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
 
-    X_train = process_data(X_train, training=True)
-
     xgb = XGBClassifier()
 
     xgb.fit(X_train,y_train)

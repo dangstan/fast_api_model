@@ -4,12 +4,17 @@ from sklearn.model_selection import KFold
 from imblearn.over_sampling import BorderlineSMOTE
 import pandas as pd
 from ml.model import *
+from ml.data import process_data
 
 data = pd.read_csv('../data/census.csv')
 
 y = data.pop('salary')
 
 y= y.map({' >50K':1,' <=50K':0})
+
+data = process_data(data, training=True)
+
+data.to_csv('data/pre_train_data.csv', index=False)
 
 kf = KFold(5,shuffle=True)
 

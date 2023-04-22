@@ -43,6 +43,9 @@ def process_data(
 
     X['sex']=X['sex'].map({' Male':1,' Female':0})
 
+    X_obj = X.select_dtypes(['object'])
+    X[X_obj.columns] = X_obj.apply(lambda x: x.str.strip())
+
     if training is True:
 
         scaler = StandardScaler()
