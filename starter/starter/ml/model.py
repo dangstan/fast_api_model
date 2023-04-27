@@ -1,6 +1,7 @@
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from xgboost import XGBClassifier
 from ml.data import process_data
+import json
 
 
 # Optional: implement hyperparameter tuning.
@@ -68,4 +69,27 @@ def inference(model, X):
     X = process_data(X)
     return model.predict(X)
 
+
+def slices_performance(X, y, fixes, model):
+
+    cat_ft = json.load(open('../data/cat_ft.json'))
+
+    for col in cat_ft:
+        fixes[col] = {}
+        for slice in X.columns[X.columns.str.contains(col+'_')]:
+
+            fixes[col][slice] = {}
+
+            temp = X[X[slice]==1]
+            y_t = y[temp.index]
+
+            y_pred = model.predict(temp)
+
+            metrics = compute_model_metrics(y_t,y_pred)
+
+            fixes[col][slice]['precision'] = metrics[0]
+            fixes[col][slice]['recall'] = metrics[1]
+            fixes[col][slice]['f1'] = metrics[2]
+
+    return fixes
     

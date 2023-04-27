@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from joblib import dump, load
 import json
+import os
 
 
 def process_data(
@@ -38,42 +39,63 @@ def process_data(
         Processed data.
     """
 
-    cat_ft = json.load(open('cat_ft.json'))
-    num_ft = json.load(open('num_ft.json'))
+    X.columns = X.columns.str.strip()
+    df_obj = X.select_dtypes(['object'])
+    X[df_obj.columns] = df_obj.apply(lambda x: x.str.strip())
 
-    X['sex']=X['sex'].map({' Male':1,' Female':0})
+    X['sex']=X['sex'].map({'Male':1,'Female':0})
 
     X_obj = X.select_dtypes(['object'])
     X[X_obj.columns] = X_obj.apply(lambda x: x.str.strip())
 
     if training is True:
 
+        num_ft = X.dtypes[X.dtypes=='int64'].index.tolist()
+        cat_ft = X.dtypes[X.dtypes!='int64'].index.tolist()[:-1]
+
+        with open('../data/cat_ft.json', 'w') as f:
+            json.dump(cat_ft, f)
+        with open('../data/num_ft.json', 'w') as f:
+            json.dump(num_ft, f)   
+
+
+        if not os.path.exists("../data/std_scalers"):
+            os.makedirs("../data/std_scalers")
+
         scaler = StandardScaler()
         for col in num_ft:
             X[col] = scaler.fit_transform(X[[col]])
-            dump(scaler, 'std_scalers/'+col+'_std_scaler.bin', compress=True)
+            dump(scaler, '../data/std_scalers/'+col+'_std_scaler.bin', compress=True)
 
         X = X[(X['capital-gain']<28000) & (X['capital-loss']<2800)]
-        X = X[~((X['workclass']==' ?') | (X['occupation']==' ?') | (X['native-country']==' ?'))]
+        X = X[~((X['workclass']=='?') | (X['occupation']=='?') | (X['native-country']=='?'))]
         
+        y = X.pop('salary')
+        y= y.map({'>50K':1,'<=50K':0})
+
         dummies = pd.get_dummies(X.loc[:,cat_ft])
         X = pd.concat([X,dummies],axis=1)
         X = X.drop(columns=cat_ft)
         
-        with open('dummies.json', 'w') as f:
+        with open('../data/dummies.json', 'w') as f:
             json.dump(dummies.columns.tolist(), f)
+
+        return X,y
 
     else:
 
+        cat_ft = json.load(open('../data/cat_ft.json'))
+        num_ft = json.load(open('../data/num_ft.json'))
+
         for col in num_ft:
-            load(scaler, 'std_scalers/'+col+'_std_scaler.bin')
+            scaler = load('../data/std_scalers/'+col+'_std_scaler.bin')
             X[col] = scaler.transform(X[[col]])
 
-        dumm_cols = json.load(open('dummies.json'))
+        dumm_cols = json.load(open('../data/dummies.json'))
         new_d = pd.get_dummies(X.loc[:,cat_ft])
         new_d = new_d[new_d.columns[new_d.columns.isin(dumm_cols)]]
         X = pd.concat([X,new_d],axis=1)
         X[X.columns[~X.columns.isin(dumm_cols)]] = 0
+        X = X.drop(columns=cat_ft)
 
-
-    return X
+        return X

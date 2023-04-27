@@ -2,37 +2,43 @@
 
 from sklearn.model_selection import KFold
 from imblearn.over_sampling import BorderlineSMOTE
+from sklearn.model_selection import train_test_split
 import pandas as pd
 from ml.model import *
 from ml.data import process_data
 
 data = pd.read_csv('../data/census.csv')
 
-y = data.pop('salary')
+data, y = process_data(data, training=True)
 
-y= y.map({' >50K':1,' <=50K':0})
+data.to_csv('../data/pre_train_data.csv', index=False)
 
-data = process_data(data, training=True)
+kf = KFold(3,shuffle=True)
 
-data.to_csv('data/pre_train_data.csv', index=False)
+model = [None,[0.0]]
 
-kf = KFold(5,shuffle=True)
+X_train, X_test, y_train, y_test  = train_test_split(data,y, test_size=0.25, random_state=11)
 
-model = [None,0.0]
+for train_idx, test_idx in kf.split(X_train):
 
-for train_idx, test_idx in kf.split(data):
-
-    X_train, X_test = data[train_idx],data[test_idx]
-    y_train, y_test = y[train_idx],y[test_idx]
+    X_train_2 = data[data.index.isin(train_idx)]
+    y_train_2 = y[y.index.isin(train_idx)]
 
     oversample = BorderlineSMOTE()
-    X_train,y_train = oversample.fit_resample(X_train,y_train)
+    X_train_2,y_train_2 = oversample.fit_resample(X_train_2,y_train_2)
 
-    xgboost = train_model(X_train,y_train)
-    score = compute_model_metrics(y_test,inference(X_test))[-1]
+    xgboost = train_model(X_train_2,y_train_2)
+    score = compute_model_metrics(y_test,xgboost.predict(X_test))
+    print(score)
 
-    if score>model[1]:
+    if score[-1]>model[1][-1]:
         model = [xgboost,score]
 
+fixes = {}
+fixes['main'] = dict(zip(['precision','recall','f1'],list(model[1])))
+fixes = slices_performance(data, y, fixes, model[0])
 
-model[0].save_model("data/xgb_model.pkl")
+with open('../data/slice_output.txt', 'w') as file:
+    file.write(json.dumps(fixes)) 
+
+model[0].save_model("../data/xgb_model.pkl")
