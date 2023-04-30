@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 from joblib import dump, load
 import json
 import os
@@ -73,29 +73,31 @@ def process_data(
         y = X.pop('salary')
         y= y.map({'>50K':1,'<=50K':0})
 
-        dummies = pd.get_dummies(X.loc[:,cat_ft])
-        X = pd.concat([X,dummies],axis=1)
-        X = X.drop(columns=cat_ft)
-        
-        with open('../data/dummies.json', 'w') as f:
-            json.dump(dummies.columns.tolist(), f)
+        le_dict = {}
+        le = LabelEncoder()
+        for cat in cat_ft:
+            if cat=='sex':
+                continue
+            X.loc[:,cat] = le.fit_transform(X[cat])
+            le_dict[cat] = list(le.classes_)
+
+        with open('../data/le_dict.json', 'w') as f:
+            json.dump(le_dict, f)
 
         return X,y
 
     else:
 
-        cat_ft = json.load(open('../data/cat_ft.json'))
-        num_ft = json.load(open('../data/num_ft.json'))
+        cat_ft = json.load(open('data/cat_ft.json'))
+        num_ft = json.load(open('data/num_ft.json'))
 
         for col in num_ft:
-            scaler = load('../data/std_scalers/'+col+'_std_scaler.bin')
+            scaler = load('data/std_scalers/'+col+'_std_scaler.bin')
             X[col] = scaler.transform(X[[col]])
 
-        dumm_cols = json.load(open('../data/dummies.json'))
-        new_d = pd.get_dummies(X.loc[:,cat_ft])
-        new_d = new_d[new_d.columns[new_d.columns.isin(dumm_cols)]]
-        X = pd.concat([X,new_d],axis=1)
-        X[X.columns[~X.columns.isin(dumm_cols)]] = 0
-        X = X.drop(columns=cat_ft)
+        le_dict = json.load(open('data/le_dict.json'))
+        for cat in cat_ft:
+            le = le_dict[cat]
+            X[cat] = X[cat].map(dict(zip(le,range(len(le)))))
 
         return X

@@ -1,4 +1,7 @@
+from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.metrics import fbeta_score, precision_score, recall_score
+from imblearn.pipeline import make_pipeline
+from imblearn.over_sampling import BorderlineSMOTE
 from xgboost import XGBClassifier
 from ml.data import process_data
 import json
@@ -21,11 +24,27 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
 
-    xgb = XGBClassifier()
+    kf = KFold(n_splits=5, random_state=42, shuffle=True)
 
-    xgb.fit(X_train,y_train)
+    imba_pipeline = make_pipeline(BorderlineSMOTE(random_state=42), 
+                              XGBClassifier(random_state=42))
 
-    return xgb
+    params = {
+        'min_child_weight': [1, 10, 50],
+        'gamma': [0.5, 1, 2, 5, 10],
+        'subsample': [0.6, 0.8, 1.0],
+        'colsample_bytree': [0.6, 0.8, 1.0],
+        'max_depth': [10, 100, 500],
+        'n_estimators': [100,400,800]
+        }
+
+    new_params = {'xgbclassifier__' + key: params[key] for key in params}
+
+    grid_imba = GridSearchCV(imba_pipeline, param_grid = new_params, scoring='f1', cv=kf)
+
+    grid_imba.fit(X_train, y_train)
+
+    return grid_imba
 
 
 
@@ -76,11 +95,11 @@ def slices_performance(X, y, fixes, model):
 
     for col in cat_ft:
         fixes[col] = {}
-        for slice in X.columns[X.columns.str.contains(col+'_')]:
+        for slice in X[col].uniques():
 
             fixes[col][slice] = {}
 
-            temp = X[X[slice]==1]
+            temp = X[X[col]==slice]
             y_t = y[temp.index]
 
             y_pred = model.predict(temp)
