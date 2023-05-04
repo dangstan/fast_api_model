@@ -1,12 +1,10 @@
-Cython==0.29.23
-numpy
+numpy>=1.20.0
 pandas
-scikit-learn
+scikit-learn==1.2.1
 pytest
 requests
 fastapi==0.63.0
 uvicorn
-gunicorn
 matplotlib
 xgboost==1.7.5
 lightgbm
