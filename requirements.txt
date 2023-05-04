@@ -1,3 +1,4 @@
+Cython==0.29.23
 numpy
 pandas
 scikit-learn
