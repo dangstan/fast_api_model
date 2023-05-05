@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, Union
 import pickle
 import json
-from ml.data import process_data
+from data import process_data
 
 # Instantiate the app.
 app = FastAPI()
