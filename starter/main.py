@@ -17,7 +17,7 @@ async def say_hello():
 
 
 # Loading in model from serialized .pkl file
-pkl_filename = "model/gridxgb_model.pkl"
+pkl_filename = "starter/model/gridxgb_model.pkl"
 with open(pkl_filename, 'rb') as file:
 	model = pickle.load(file)
 
