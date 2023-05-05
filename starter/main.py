@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, Union
 import pickle
 import json
-from starter.ml.data import process_data
+from ml.data import process_data
 
 # Instantiate the app.
 app = FastAPI()
@@ -17,7 +17,7 @@ async def say_hello():
 
 
 # Loading in model from serialized .pkl file
-pkl_filename = "starter/model/gridxgb_model.pkl"
+pkl_filename = "model/gridxgb_model.pkl"
 with open(pkl_filename, 'rb') as file:
 	model = pickle.load(file)
 
