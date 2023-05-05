@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy.stats
-from starter.starter.ml.model import compute_model_metrics,inference
+from ml.model import compute_model_metrics,inference
 
 
 def test_column_names(data):
