@@ -88,14 +88,14 @@ def process_data(
 
     else:
 
-        cat_ft = json.load(open('../data/cat_ft.json'))
-        num_ft = json.load(open('../data/num_ft.json'))
+        cat_ft = json.load(open('../../data/cat_ft.json'))
+        num_ft = json.load(open('../../data/num_ft.json'))
 
         for col in num_ft:
-            scaler = load('data/std_scalers/'+col+'_std_scaler.bin')
+            scaler = load('../../data/std_scalers/'+col+'_std_scaler.bin')
             X[col] = scaler.transform(X[[col]])
 
-        le_dict = json.load(open('data/le_dict.json'))
+        le_dict = json.load(open('../../data/le_dict.json'))
         for cat in cat_ft:
             le = le_dict[cat]
             X[cat] = X[cat].map(dict(zip(le,range(len(le)))))
