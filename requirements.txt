@@ -7,3 +7,4 @@ fastapi==0.70.1
 uvicorn==0.16.0
 xgboost==1.7.4
 lightgbm==3.3.5
+imbalanced-learn==0.7.0
