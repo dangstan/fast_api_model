@@ -88,8 +88,8 @@ def process_data(
 
     else:
 
-        cat_ft = json.load(open('data/cat_ft.json'))
-        num_ft = json.load(open('data/num_ft.json'))
+        cat_ft = json.load(open('../data/cat_ft.json'))
+        num_ft = json.load(open('../data/num_ft.json'))
 
         for col in num_ft:
             scaler = load('data/std_scalers/'+col+'_std_scaler.bin')
