@@ -17,7 +17,7 @@ async def say_hello():
 
 
 # Loading in model from serialized .pkl file
-pkl_filename = "model/gridxgb_model.pkl"
+pkl_filename = "starter/model/gridxgb_model.pkl"
 with open(pkl_filename, 'rb') as file:
 	model = pickle.load(file)
 
@@ -50,5 +50,5 @@ async def predict(data: InputData):
     X = process_data(df)
 
     # Getting the prediction from the XGBoost Classification model
-    pred = ['>50K' if model.predict(X).tolist()[0]==1 else '<=50K'][0]
+    pred = ['>50K' if model.predict(X.values).tolist()[0]==1 else '<=50K'][0]
     return {"prediction":pred}
