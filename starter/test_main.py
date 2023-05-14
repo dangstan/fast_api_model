@@ -57,3 +57,8 @@ def test_post_inference_example_two():
 
     assert response.status_code == 200, 'response failed'
     assert response.json() == {"prediction":"<=50K"}, "wrong prediction: expected <=50K, but the result was >50K"
+
+def test_if_file_in_subfolder():
+    for dirpath, dirnames, filenames in os.walk('starter'):
+        print(filenames)
+        assert 'census.csv' in filenames
