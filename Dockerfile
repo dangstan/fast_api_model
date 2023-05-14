@@ -18,8 +18,6 @@ ENV PYTHONPATH=/app:$PYTHONPATH
 # Copy the current directory contents into the container at /app
 COPY . /starter
 
-COPY . .dvc
-
 # Install any needed packages specified in requirements.txt
 RUN pip install dvc \ 
     dvc[s3] \
