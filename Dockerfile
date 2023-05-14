@@ -18,10 +18,15 @@ ENV PYTHONPATH=/app:$PYTHONPATH
 COPY . /starter
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt && pip install dvc dvc[s3]
+RUN pip install --no-cache-dir -r requirements.txt && pip install dvc dvc[s3] flake8 pytest
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
 # Define environment variable
 ENV PORT 80
+
+CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics && \
+flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics \
+pytest \
+uvicorn starter.main:app --host 0.0.0.0 --port $PORT
