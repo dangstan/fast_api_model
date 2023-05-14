@@ -3,6 +3,7 @@ FROM python:3.8-slim-buster
 
 # Install gfortran and other dependencies
 RUN apt-get update && apt-get install -y \
+    git \
     gfortran \
     gcc \
     libblas-dev \
@@ -43,5 +44,4 @@ ENV PORT 8000
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
 dvc pull ; \
-pytest ; \
-uvicorn starter.main:app --reload --port $PORT
+pytest
