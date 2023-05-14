@@ -62,7 +62,7 @@ def test_if_file_in_subfolder():
     file_paths = []  # List which will store all of the full filepaths.
 
     # Walk the tree.
-    for root, directories, files in os.walk('starter'):
+    for root, directories, files in os.walk():
         for filename in files:
             # Join the two strings to form the full filepath.
             filepath = os.path.join(root, filename)
