@@ -31,7 +31,8 @@ RUN pip install dvc dvc[s3] \
     scipy==1.10.1 \
     setuptools==67.6.1 \
     xgboost==1.7.4 \
-    httpx==0.24.0
+    httpx==0.24.0 \
+    uvicorn==0.16.0
 
 # Make port 80 available to the world outside this container
 EXPOSE 8000
