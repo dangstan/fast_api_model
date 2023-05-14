@@ -25,6 +25,3 @@ EXPOSE 80
 
 # Define environment variable
 ENV PORT 80
-
-# Run app.py when the container launches
-CMD uvicorn starter.main:app --host 0.0.0.0 --port $PORT
