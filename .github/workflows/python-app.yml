@@ -26,3 +26,6 @@ jobs:
 
       - name: Run Docker image
         run: docker run my-image
+
+      - name: Pulling dvc data
+        run: dvc pull
