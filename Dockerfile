@@ -42,6 +42,9 @@ EXPOSE 8000
 # Define environment variable
 ENV PORT 8000
 
+ENV AWS_ACCESS_KEY_ID="dummy"
+ENV AWS_SECRET_ACCESS_KEY="dummy"
+
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
 dvc pull ; \
