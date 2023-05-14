@@ -3,7 +3,7 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from imblearn.pipeline import make_pipeline
 from imblearn.over_sampling import BorderlineSMOTE
 from xgboost import XGBClassifier
-from .data import process_data
+from data import process_data
 import json
 
 
