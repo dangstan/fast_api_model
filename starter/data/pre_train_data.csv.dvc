@@ -1,0 +1,4 @@
+outs:
+- md5: 5417259cb75f2347213b472f0bc03f5e
+  size: 7580707
+  path: pre_train_data.csv
