@@ -68,4 +68,6 @@ def test_if_file_in_subfolder():
             filepath = os.path.join(root, filename)
             file_paths.append(filepath)  # Add it to the list.
 
+    print(file_paths)
+
     assert set([x for x in file_paths if x.endswith('census.csv')]) == {True,False}
