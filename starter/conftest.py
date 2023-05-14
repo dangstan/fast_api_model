@@ -1,6 +1,7 @@
 import pytest
 import pandas as pd
 import json
+import dvc.api
 
 
 def pytest_addoption(parser):
@@ -14,14 +15,14 @@ def pytest_addoption(parser):
 @pytest.fixture(scope='session')
 def data(request):
 
-    df = pd.read_csv('starter/data/pre_train_data.csv')
+    df = pd.read_csv('data/pre_train_data.csv')
 
     return df
 
 @pytest.fixture(scope='session')
 def init_data(request):
 
-    df = pd.read_csv('starter/data/census.csv')
+    df = pd.read_csv('data/census.csv')
 
     return df
 
@@ -30,7 +31,7 @@ def model(request):
 
     import pickle
 
-    filename = "starter/model/gridxgb_model.pkl"
+    filename = "model/gridxgb_model.pkl"
 
     model = pickle.load(open(filename, 'rb'))
 
@@ -39,8 +40,8 @@ def model(request):
 @pytest.fixture(scope='session')
 def columns(request):
     
-    cat_ft = json.load(open('starter/data/cat_ft.json'))
-    num_ft = json.load(open('starter/data/num_ft.json'))
+    cat_ft = json.load(open('data/cat_ft.json'))
+    num_ft = json.load(open('data/num_ft.json'))
 
     return cat_ft + num_ft
 
