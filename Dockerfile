@@ -9,13 +9,13 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /starter
 
 # Add your application to the PYTHONPATH
 ENV PYTHONPATH=/app:$PYTHONPATH
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY . /starter
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
@@ -27,4 +27,4 @@ EXPOSE 80
 ENV NAME World
 
 # Run app.py when the container launches
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "starter.main:app", "--host", "0.0.0.0", "--port", "80"]
