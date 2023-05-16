@@ -1,0 +1,4 @@
+[core]
+    remote = s3_remote
+['remote "s3_remote"']
+    url = https://bucket.s3.amazonaws.com/fastapi-ds-project
