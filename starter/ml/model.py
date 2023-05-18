@@ -86,8 +86,10 @@ def inference(model, X):
     """
 
     X = process_data(X)
+
+    cols_order = model.feature_names_in_.tolist()
     
-    return model.predict(X)
+    return model.predict(X[cols_order].values)
 
 
 def slices_performance(X, X_ref, y, fixes, model):

@@ -45,7 +45,6 @@ def test_row_count(data):
 
 
 def test_inference(init_data,model):
-    print(init_data.sample(frac=.2))
     inf = inference(model,init_data.sample(frac=.2).drop(columns=' salary'))
     assert set(list(inf))=={0,1}
 
