@@ -24,6 +24,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        
+      - name: Remove last two lines from Dockerfile
+        run: tail -n 2 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
 
       - name: Build Docker image
         run: docker build --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t my-image .
