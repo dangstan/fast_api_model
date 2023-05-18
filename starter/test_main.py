@@ -57,17 +57,3 @@ def test_post_inference_example_two():
 
     assert response.status_code == 200, 'response failed'
     assert response.json() == {"prediction":"<=50K"}, "wrong prediction: expected <=50K, but the result was >50K"
-
-def test_if_file_in_subfolder():
-    file_paths = []  # List which will store all of the full filepaths.
-
-    # Walk the tree.
-    for root, directories, files in os.walk('.'):
-        for filename in files:
-            # Join the two strings to form the full filepath.
-            filepath = os.path.join(root, filename)
-            file_paths.append(filepath)  # Add it to the list.
-
-    print(file_paths)
-
-    assert set([x for x in file_paths if x.endswith('census.csv')]) == {True,False}

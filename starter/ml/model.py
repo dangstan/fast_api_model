@@ -101,7 +101,6 @@ def slices_performance(X, X_ref, y, fixes, model):
             fixes[col][slice] = {}
 
             temp = X[X_ref[col]==slice]
-            print(temp)
             y_t = y[temp.index]
 
             y_pred = model.predict(temp)
