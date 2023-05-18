@@ -14,8 +14,6 @@ def test_column_names(data):
 
     actual_cols = [x[:x.find('_')] if '_' in x else x for x in data.columns]
 
-    print(set(actual_cols))
-
     # This also enforces the same order
     assert set(expected_columns) == set(actual_cols)
 
@@ -47,7 +45,7 @@ def test_row_count(data):
 
 
 def test_inference(init_data,model):
-    inf = inference(model,init_data.sample(frac=.2))
-    print(inf,len(inf))
+    print(init_data.sample(frac=.2))
+    inf = inference(model,init_data.sample(frac=.2).drop(columns=' salary'))
     assert set(list(inf))=={0,1}
 
