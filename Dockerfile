@@ -1,10 +1,6 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
 
-# Set environment variables for AWS credentials
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-
 # Install gfortran and other dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -45,9 +41,6 @@ EXPOSE 8000
 
 # Define environment variable
 ENV PORT 8000
-
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
