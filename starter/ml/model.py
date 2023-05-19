@@ -1,3 +1,10 @@
+'''
+This file contains functions related to the machine learning model. 
+It includes a function train_model to train the XGBoost model, 
+compute_model_metrics to compute precision, recall, and F1 score of 
+the model, and inference to make predictions using the model.
+'''
+
 from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from imblearn.pipeline import make_pipeline
@@ -26,8 +33,8 @@ def train_model(X_train, y_train):
 
     kf = KFold(n_splits=5, random_state=42, shuffle=True)
 
-    imba_pipeline = make_pipeline(BorderlineSMOTE(random_state=42), 
-                              XGBClassifier(random_state=42))
+    imba_pipeline = make_pipeline(BorderlineSMOTE(random_state=42),
+                                  XGBClassifier(random_state=42))
 
     params = {
         'min_child_weight': [1, 10, 50],
@@ -35,17 +42,20 @@ def train_model(X_train, y_train):
         'subsample': [0.6, 0.8, 1.0],
         'colsample_bytree': [0.6, 0.8, 1.0],
         'max_depth': [10, 100, 500],
-        'n_estimators': [100,400,800]
-        }
+        'n_estimators': [100, 400, 800]
+    }
 
     new_params = {'xgbclassifier__' + key: params[key] for key in params}
 
-    grid_imba = GridSearchCV(imba_pipeline, param_grid = new_params, scoring='f1', cv=kf)
+    grid_imba = GridSearchCV(
+        imba_pipeline,
+        param_grid=new_params,
+        scoring='f1',
+        cv=kf)
 
     grid_imba.fit(X_train, y_train)
 
     return grid_imba
-
 
 
 def compute_model_metrics(y, preds):
@@ -88,7 +98,7 @@ def inference(model, X):
     X = process_data(X)
 
     cols_order = model.feature_names_in_.tolist()
-    
+
     return model.predict(X[cols_order].values)
 
 
@@ -102,16 +112,15 @@ def slices_performance(X, X_ref, y, fixes, model):
 
             fixes[col][slice] = {}
 
-            temp = X[X_ref[col]==slice]
+            temp = X[X_ref[col] == slice]
             y_t = y[temp.index]
 
             y_pred = model.predict(temp)
 
-            metrics = compute_model_metrics(y_t,y_pred)
+            metrics = compute_model_metrics(y_t, y_pred)
 
             fixes[col][slice]['precision'] = metrics[0]
             fixes[col][slice]['recall'] = metrics[1]
             fixes[col][slice]['f1'] = metrics[2]
 
     return fixes
-    

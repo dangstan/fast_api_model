@@ -2,8 +2,6 @@ services:
   - type: web
     name: my-service
     env: docker
-    buildCommand: docker build . --file Dockerfile --tag my-service
-    startCommand: docker run -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY -p 80:80 my-service
     envVars:
       - key: AWS_ACCESS_KEY_ID
         fromSystemEnv: AWS_ACCESS_KEY_ID

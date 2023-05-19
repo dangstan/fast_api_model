@@ -1,9 +1,18 @@
+'''
+This file contains tests related to the machine learning model. 
+It checks if the column names of the dataset match the expected 
+column names, if the model metrics are within the expected range, 
+and other parameters related to data and inference process.
+'''
+
+
 import pandas as pd
 import numpy as np
 import scipy.stats
-from ml.model import compute_model_metrics,inference
+from ml.model import compute_model_metrics, inference
 from joblib import load
 import json
+
 
 def test_column_names(data):
 
@@ -20,9 +29,10 @@ def test_column_names(data):
 
 def test_compute_model_metrics():
 
-    metrics =  compute_model_metrics([0,1,1,0,1,0,0,0,1],[1,1,1,0,0,1,0,0,1])
+    metrics = compute_model_metrics([0, 1, 1, 0, 1, 0, 0, 0, 1], [
+                                    1, 1, 1, 0, 0, 1, 0, 0, 1])
 
-    assert max(metrics)<1 and min(metrics)>0.5
+    assert max(metrics) < 1 and min(metrics) > 0.5
 
 
 def test_proper_boundaries(data: pd.DataFrame):
@@ -30,12 +40,14 @@ def test_proper_boundaries(data: pd.DataFrame):
     Test proper capital-gain and capital-loss boundaries
     """
 
-    for col in ['capital-gain','capital-loss']:
-        scaler = load('starter/data/std_scalers/'+col+'_std_scaler.bin')
+    for col in ['capital-gain', 'capital-loss']:
+        scaler = load('starter/data/std_scalers/' + col + '_std_scaler.bin')
         data[col] = scaler.inverse_transform(data[[col]])
-        #data[col] = (data[col] * scaler.scale_) + scaler.mean_
+        # data[col] = (data[col] * scaler.scale_) + scaler.mean_
 
-    idx = data['capital-gain'].between(0, 29000) & data['capital-loss'].between(0, 2900)
+    idx = data['capital-gain'].between(0,
+                                       29000) & data['capital-loss'].between(0,
+                                                                             2900)
 
     assert np.sum(~idx) == 0
 
@@ -44,7 +56,6 @@ def test_row_count(data):
     assert 15000 < data.shape[0] < 40000
 
 
-def test_inference(init_data,model):
-    inf = inference(model,init_data.sample(frac=.2).drop(columns=' salary'))
-    assert set(list(inf))=={0,1}
-
+def test_inference(init_data, model):
+    inf = inference(model, init_data.sample(frac=.2).drop(columns=' salary'))
+    assert set(list(inf)) == {0, 1}

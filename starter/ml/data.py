@@ -1,3 +1,10 @@
+'''
+This file contains a function process_data that preprocesses 
+the data before it can be used for training or prediction. 
+It takes care of encoding categorical variables, scaling 
+numerical variables, and other data cleaning tasks.
+'''
+
 import pandas as pd
 from sklearn.preprocessing import RobustScaler, LabelEncoder
 from joblib import dump, load
@@ -43,23 +50,23 @@ def process_data(
     df_obj = X.select_dtypes(['object'])
     X[df_obj.columns] = df_obj.apply(lambda x: x.str.strip())
 
-    X['sex']=X['sex'].map({'Male':1,'Female':0})
+    X['sex'] = X['sex'].map({'Male': 1, 'Female': 0})
 
     X_obj = X.select_dtypes(['object'])
     X[X_obj.columns] = X_obj.apply(lambda x: x.str.strip())
 
-    X = X[~((X['workclass']=='?') | (X['occupation']=='?') | (X['native-country']=='?'))]
+    X = X[~((X['workclass'] == '?') | (X['occupation'] == '?')
+            | (X['native-country'] == '?'))]
 
     if training is True:
 
-        num_ft = X.dtypes[X.dtypes=='int64'].index.tolist()
-        cat_ft = X.dtypes[X.dtypes!='int64'].index.tolist()[:-1]
+        num_ft = X.dtypes[X.dtypes == 'int64'].index.tolist()
+        cat_ft = X.dtypes[X.dtypes != 'int64'].index.tolist()[:-1]
 
         with open('data/cat_ft.json', 'w') as f:
             json.dump(cat_ft, f)
         with open('data/num_ft.json', 'w') as f:
-            json.dump(num_ft, f)   
-
+            json.dump(num_ft, f)
 
         if not os.path.exists("data/std_scalers"):
             os.makedirs("data/std_scalers")
@@ -67,40 +74,48 @@ def process_data(
         scaler = RobustScaler()
         for col in num_ft:
             X[col] = scaler.fit_transform(X[[col]])
-            dump(scaler, 'data/std_scalers/'+col+'_std_scaler.bin', compress=True)
-        
-        X = X[(X['capital-gain']<28000) & (X['capital-loss']<2800)]
-        
-        y = X.pop('salary')
-        y= y.map({'>50K':1,'<=50K':0})
+            dump(
+                scaler,
+                'data/std_scalers/' +
+                col +
+                '_std_scaler.bin',
+                compress=True)
 
-        dummies = pd.get_dummies(X.loc[:,cat_ft])
+        X = X[(X['capital-gain'] < 28000) & (X['capital-loss'] < 2800)]
+
+        y = X.pop('salary')
+        y = y.map({'>50K': 1, '<=50K': 0})
+
+        dummies = pd.get_dummies(X.loc[:, cat_ft])
         df_ref = X.copy()
-        X = pd.concat([X,dummies],axis=1)
+        X = pd.concat([X, dummies], axis=1)
         X = X.drop(columns=cat_ft)
         with open('data/dummies.json', 'w') as f:
             json.dump(dummies.columns.tolist(), f)
 
-        return X,df_ref,y
+        return X, df_ref, y
 
     else:
 
         cat_ft = json.load(open('starter/data/cat_ft.json'))
         num_ft = json.load(open('starter/data/num_ft.json'))
-        
-        X = X[X.columns[X.columns.isin(cat_ft+num_ft)]]
+
+        X = X[X.columns[X.columns.isin(cat_ft + num_ft)]]
 
         for col in num_ft:
-            scaler = load('starter/data/std_scalers/'+col+'_std_scaler.bin')
+            scaler = load(
+                'starter/data/std_scalers/' +
+                col +
+                '_std_scaler.bin')
             X[col] = scaler.transform(X[[col]])
 
         default_dumm = json.load(open('starter/data/dummies.json'))
-        dummies = pd.get_dummies(X.loc[:,cat_ft])
-        X = pd.concat([X,dummies],axis=1)
+        dummies = pd.get_dummies(X.loc[:, cat_ft])
+        X = pd.concat([X, dummies], axis=1)
         X[[x for x in default_dumm if x not in dummies.columns]] = 0
         X = X.drop(columns=cat_ft)
 
         print(X)
         print(X.columns.tolist())
-        
+
         return X

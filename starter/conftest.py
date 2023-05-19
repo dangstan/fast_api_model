@@ -1,3 +1,9 @@
+'''
+ This file contains pytest fixtures that are used across different test modules. 
+ These include functions that return the dataset, the machine learning model, 
+ and some parameters used in the tests.
+'''
+
 import pytest
 import pandas as pd
 import json
@@ -18,12 +24,14 @@ def data(request):
 
     return df
 
+
 @pytest.fixture(scope='session')
 def init_data(request):
 
     df = pd.read_csv('starter/data/census.csv')
 
     return df
+
 
 @pytest.fixture(scope='session')
 def model(request):
@@ -36,13 +44,15 @@ def model(request):
 
     return model
 
+
 @pytest.fixture(scope='session')
 def columns(request):
-    
+
     cat_ft = json.load(open('starter/data/cat_ft.json'))
     num_ft = json.load(open('starter/data/num_ft.json'))
 
     return cat_ft + num_ft
+
 
 @pytest.fixture(scope='session')
 def max_gain(request):
@@ -52,6 +62,7 @@ def max_gain(request):
         pytest.fail("You must provide min_price")
 
     return float(min_price)
+
 
 @pytest.fixture(scope='session')
 def max_loss(request):
