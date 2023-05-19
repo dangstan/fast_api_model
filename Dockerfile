@@ -41,10 +41,10 @@ RUN pip install dvc \
     uvicorn==0.16.0
 
 # Make port 80 available to the world outside this container
-EXPOSE 8000
+EXPOSE 80
 
 # Define environment variable
-ENV PORT 8000
+ENV PORT 80
 
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
