@@ -56,4 +56,4 @@ dvc remote modify s3_remote secret_access_key ${AWS_SECRET_ACCESS_KEY} ; \
 dvc pull -v; \
 pytest ; \
 cd starter ; \
-uvicorn main:app --host 0.0.0.0 --port 8000
+["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
