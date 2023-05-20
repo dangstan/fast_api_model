@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:1.2
+
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
 
@@ -42,8 +44,8 @@ EXPOSE 80
 # Define environment variable
 ENV PORT 80
 
-RUN export AWS_ACCESS_KEY_ID=$(awk -F "=" '/aws_access_key_id/ {print $2}' /etc/secrets/AWS_ACCESS_KEY_ID) && \
-    export AWS_SECRET_ACCESS_KEY=$(awk -F "=" '/aws_secret_access_key/ {print $2}' /etc/secrets/AWS_SECRET_ACCESS_KEY)
+RUN --mount=type=secret,id=AWS_ACCESS_KEY_ID,dst=/etc/secrets/AWS_ACCESS_KEY_ID cat /etc/secrets/.env
+RUN --mount=type=secret,id=AWS_SECRET_ACCESS_KEY,dst=/etc/secrets/AWS_SECRET_ACCESS_KEY cat /etc/secrets/.env
 
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
