@@ -44,11 +44,8 @@ EXPOSE 80
 # Define environment variable
 ENV PORT 80
 
-RUN --mount=type=secret,id=AWS_ACCESS_KEY_ID,dst=/etc/secrets/AWS_ACCESS_KEY_ID cat /etc/secrets/AWS_ACCESS_KEY_ID
-RUN --mount=type=secret,id=AWS_SECRET_ACCESS_KEY,dst=/etc/secrets/AWS_SECRET_ACCESS_KEY cat /etc/secrets/AWS_SECRET_ACCESS_KEY
-
-RUN export AWS_ACCESS_KEY_ID=$(cat /etc/secrets/AWS_ACCESS_KEY_ID)
-RUN export AWS_SECRET_ACCESS_KEY=$(cat /etc/secrets/AWS_SECRET_ACCESS_KEY)
+RUN export AWS_ACCESS_KEY_ID=$(--mount=type=secret,id=AWS_ACCESS_KEY_ID,dst=/etc/secrets/AWS_ACCESS_KEY_ID cat /etc/secrets/AWS_ACCESS_KEY_ID)
+RUN export AWS_SECRET_ACCESS_KEY=$(--mount=type=secret,id=AWS_SECRET_ACCESS_KEY,dst=/etc/secrets/AWS_SECRET_ACCESS_KEY cat /etc/secrets/AWS_SECRET_ACCESS_KEY)
 
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics ; \
