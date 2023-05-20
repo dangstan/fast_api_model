@@ -47,8 +47,7 @@ ENV PORT 80
 RUN --mount=type=secret,id=AWS_ACCESS_KEY_ID,dst=/etc/secrets/AWS_ACCESS_KEY_ID \
     --mount=type=secret,id=AWS_SECRET_ACCESS_KEY,dst=/etc/secrets/AWS_SECRET_ACCESS_KEY \
     AWS_ACCESS_KEY_ID=$(cat /etc/secrets/AWS_ACCESS_KEY_ID) && \
-    AWS_SECRET_ACCESS_KEY=$(cat /etc/secrets/AWS_SECRET_ACCESS_KEY) && \
-    echo "Access key: $AWS_ACCESS_KEY_ID, Secret access key: $AWS_SECRET_ACCESS_KEY"
+    AWS_SECRET_ACCESS_KEY=$(cat /etc/secrets/AWS_SECRET_ACCESS_KEY)
 
 
 CMD flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics ; \
@@ -56,8 +55,8 @@ flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statist
 dvc init --no-scm; \
 dvc remote add -d s3_remote s3://fastapi-ds-project ; \
 dvc remote modify s3_remote region us-east-1 ; \
-dvc remote modify s3_remote access_key_id ${AWS_ACCESS_KEY_ID} ; \
-dvc remote modify s3_remote secret_access_key ${AWS_SECRET_ACCESS_KEY} ; \
+dvc remote modify s3_remote access_key_id $AWS_ACCESS_KEY_ID ; \
+dvc remote modify s3_remote secret_access_key $AWS_SECRET_ACCESS_KEY ; \
 dvc pull -v; \
 pytest ; \
 cd starter ; \
