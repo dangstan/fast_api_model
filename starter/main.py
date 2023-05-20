@@ -1,5 +1,5 @@
 '''
-This is your main FastAPI application. It has two endpoints. 
+This is the main FastAPI application. It has two endpoints. 
 One is a simple GET request that returns a greeting. 
 The second is a POST request where you send in data about a person, 
 and the app returns whether they make over 50K or less. 
@@ -15,7 +15,11 @@ from pydantic import BaseModel, Field
 from typing import Dict, Union
 import pickle
 import json
-from ml.data import process_data
+
+try:
+    from ml.data import process_data
+except:
+    from starter.ml.data import process_data
 
 # Instantiate the app.
 app = FastAPI()
