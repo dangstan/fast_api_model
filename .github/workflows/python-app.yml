@@ -28,11 +28,11 @@ jobs:
       - name: Remove last two lines from Dockerfile
         run: tail -n 2 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
         
-      - name: Replace '$AWS_ACCESS_KEY_ID' with '${AWS_ACCESS_KEY_ID}' in Dockerfile
-        run: sed -i 's/\$AWS_ACCESS_KEY_ID/\${AWS_ACCESS_KEY_ID}/g' Dockerfile
+      - name: Replace 'dvc remote modify' with '#dvc remote modify' in Dockerfile
+        run: sed -i 's/\dvc remote modify/\#dvc remote modify/g' Dockerfile
 
-      - name: Replace '$AWS_SECRET_ACCESS_KEY' with '${AWS_SECRET_ACCESS_KEY}' in Dockerfile
-        run: sed -i 's/\$AWS_SECRET_ACCESS_KEY/\${AWS_SECRET_ACCESS_KEY}/g' Dockerfile
+      - name: Replace '##dvc remote modify' with 'dvc remote modify' in Dockerfile
+        run: sed -i 's/\##dvc remote modify/\dvc remote modify/g' Dockerfile
       
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
