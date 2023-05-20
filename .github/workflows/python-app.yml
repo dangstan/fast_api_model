@@ -28,11 +28,17 @@ jobs:
       - name: Remove last two lines from Dockerfile
         run: tail -n 2 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
         
-      - name: Remove mount lines from Dockerfile
-        run: sed -i '/mount/d' Dockerfile
+      - name: Replace '$AWS_ACCESS_KEY_ID &' with '${AWS_ACCESS_KEY_ID} &' in Dockerfile
+        run: sed -i 's/\$AWS_ACCESS_KEY_ID &/\${AWS_ACCESS_KEY_ID} &/g' Dockerfile
+
+      - name: Replace '$AWS_SECRET_ACCESS_KEY &' with '${AWS_SECRET_ACCESS_KEY} &' in Dockerfile
+        run: sed -i 's/\$AWS_SECRET_ACCESS_KEY &/\${AWS_SECRET_ACCESS_KEY} &/g' Dockerfile
       
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
+      
+      - name: Replace "#flake8" by "flake8" in Dockerfile
+        run: sed -i 's/\#flake8 &/\flake8 &/g' Dockerfile
 
       - name: Build Docker image
         run: docker build --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t my-image .
