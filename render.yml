@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: my-service
+    env: docker
+    envVars:
+      - key: AWS_ACCESS_KEY_ID
+        fromSystemEnv: AWS_ACCESS_KEY_ID
+      - key: AWS_SECRET_ACCESS_KEY
+        fromSystemEnv: AWS_SECRET_ACCESS_KEY
