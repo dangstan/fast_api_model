@@ -15,10 +15,6 @@ WORKDIR /starter
 # Add your application to the PYTHONPATH
 ENV PYTHONPATH=/app:$PYTHONPATH
 
-# Getting aws credentials from secret files
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-
 # Copy the current directory contents into the container at /app
 COPY . /starter
 
