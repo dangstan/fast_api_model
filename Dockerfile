@@ -20,7 +20,7 @@ ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
 ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
 # Copy the current directory contents into the container at /app
-COPY . /starter
+COPY . starter
 
 # Install any needed packages specified in requirements.txt
 RUN pip install dvc \ 
@@ -54,7 +54,6 @@ dvc remote modify s3_remote region us-east-1 ; \
 dvc remote modify s3_remote access_key_id ${AWS_ACCESS_KEY_ID} ; \
 dvc remote modify s3_remote secret_access_key ${AWS_SECRET_ACCESS_KEY} ; \
 dvc pull -v; \
-pytest 
-# ; \
-#cd starter ; \
-#["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+pytest ; \
+cd starter ; \
+["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
