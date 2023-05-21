@@ -28,8 +28,8 @@ jobs:
       - name: Remove last one line from Dockerfile
         run: tail -n 1 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
         
-      - name: Replace 'install dvc' with 'install $dvc' in Dockerfile
-        run: sed -i 's/\install dvc/\install $dvc/g' Dockerfile
+      - name: Replace 'install dvc' with 'install (dvc' in Dockerfile
+        run: sed -i 's/\install dvc/\install (dvc/g' Dockerfile
 
       - name: Replace 'dvc' with '#dvc' in Dockerfile
         run: sed -i 's/\dvc/\#dvc/g' Dockerfile
@@ -37,8 +37,8 @@ jobs:
       - name: Replace '##dvc' with 'dvc' in Dockerfile
         run: sed -i 's/\##dvc/\dvc/g' Dockerfile
       
-      - name: Replace '$dvc' with 'dvc' in Dockerfile
-        run: sed -i 's/\$dvc/\dvc/g' Dockerfile
+      - name: Replace '(dvc' with 'dvc' in Dockerfile
+        run: sed -i 's/\(dvc/\dvc/g' Dockerfile
 
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
