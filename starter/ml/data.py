@@ -115,7 +115,4 @@ def process_data(
         X[[x for x in default_dumm if x not in dummies.columns]] = 0
         X = X.drop(columns=cat_ft)
 
-        print(X)
-        print(X.columns.tolist())
-
         return X
