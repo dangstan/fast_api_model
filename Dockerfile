@@ -54,7 +54,8 @@ RUN echo "Starting RUN" \
     dvc remote modify s3_remote region us-east-1 && \
     dvc remote modify s3_remote access_key_id $AWS_ACCESS_KEY_ID && \
     dvc remote modify s3_remote secret_access_key $AWS_SECRET_ACCESS_KEY && \
-    dvc pull -v
+    dvc pull -v \
+    ;
 
 CMD \
     #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics && \
