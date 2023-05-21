@@ -44,7 +44,7 @@ EXPOSE 80
 # Define environment variable
 ENV PORT 80
 
-RUN \
+RUN echo "Starting RUN" \
     --mount=type=secret,id=AWS_ACCESS_KEY_ID,dst=/etc/secrets/AWS_ACCESS_KEY_ID \
     --mount=type=secret,id=AWS_SECRET_ACCESS_KEY,dst=/etc/secrets/AWS_SECRET_ACCESS_KEY \
     AWS_ACCESS_KEY_ID=$(cat /etc/secrets/AWS_ACCESS_KEY_ID) \

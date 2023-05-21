@@ -46,9 +46,6 @@ jobs:
       - name: Replace "#flake8" by "flake8" in Dockerfile
         run: sed -i 's/\#flake8/\ flake8/g' Dockerfile
 
-      - name: Remove RUN lines from Dockerfile
-        run: sed -i '/RUN/d' Dockerfile
-
       - name: Build Docker image
         run: docker build --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -t my-image .
 
