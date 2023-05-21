@@ -28,11 +28,11 @@ jobs:
       - name: Remove last two lines from Dockerfile
         run: tail -n 2 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
         
-      - name: Replace 'dvc remote modify' with '#dvc remote modify' in Dockerfile
-        run: sed -i 's/\dvc remote modify/\#dvc remote modify/g' Dockerfile
+      - name: Replace 'dvc' with '#dvc' in Dockerfile
+        run: sed -i 's/\dvc/\#dvc/g' Dockerfile
 
-      - name: Replace '##dvc remote modify' with 'dvc remote modify' in Dockerfile
-        run: sed -i 's/\##dvc remote modify/\dvc remote modify/g' Dockerfile
+      - name: Replace '##dvc' with 'dvc' in Dockerfile
+        run: sed -i 's/\##dvc/\dvc/g' Dockerfile
       
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile

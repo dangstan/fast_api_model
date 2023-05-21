@@ -60,6 +60,10 @@ RUN \
     pytest
 
 CMD \
-    #dvc remote modify s3_remote access_key_id ${AWS_ACCESS_KEY_ID} ; \
-    #dvc remote modify s3_remote secret_access_key ${AWS_SECRET_ACCESS_KEY} ; \
+    #dvc init --no-scm ; \
+    #dvc remote add -d s3_remote s3://fastapi-ds-project ; \
+    #dvc remote modify s3_remote region us-east-1 ; \
+    #dvc remote modify s3_remote access_key_id $AWS_ACCESS_KEY_ID ; \
+    #dvc remote modify s3_remote secret_access_key $AWS_SECRET_ACCESS_KEY ; \
+    #dvc pull -v ; \
     ["uvicorn", "starter.main:app", "--host", "0.0.0.0", "--port", "80"]
