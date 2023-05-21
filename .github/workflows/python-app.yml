@@ -25,8 +25,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         
-      - name: Remove last two lines from Dockerfile
-        run: tail -n 2 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
+      - name: Remove last one line from Dockerfile
+        run: tail -n 1 Dockerfile | xargs -I {} sed -i '$ d' Dockerfile
         
       - name: Replace 'dvc' with '#dvc' in Dockerfile
         run: sed -i 's/\dvc/\#dvc/g' Dockerfile
@@ -36,6 +36,9 @@ jobs:
       
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
+
+      - name: Remove CMD lines from Dockerfile
+        run: sed -i '/CMD/d' Dockerfile
       
       - name: Replace "#flake8" by "flake8" in Dockerfile
         run: sed -i 's/\#flake8 &/\flake8 &/g' Dockerfile
