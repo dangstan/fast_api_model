@@ -37,8 +37,8 @@ jobs:
       - name: Replace '##dvc' with 'dvc' in Dockerfile
         run: sed -i 's/\##dvc/\dvc/g' Dockerfile
       
-      - name: Replace ' (dvc' with ' dvc' in Dockerfile
-        run: sed -i 's/\ (dvc/\ dvc/g' Dockerfile
+      - name: Replace ' (#dvc' with ' dvc' in Dockerfile
+        run: sed -i 's/\ (#dvc/\ dvc/g' Dockerfile
 
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
