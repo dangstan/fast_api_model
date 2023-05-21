@@ -40,8 +40,8 @@ jobs:
       - name: Replace ' (#dvc' with ' dvc' in Dockerfile
         run: sed -i 's/\ (#dvc/\ dvc/g' Dockerfile
 
-      - name: Replace '#dvc[s3' with ' dvc[s3' in Dockerfile
-        run: sed -i 's/\#dvc[s3/\ dvc[s3/g' Dockerfile
+      - name: Replace 'pip install dvc' with 'pip install dvc dvc[s3]' in Dockerfile
+        run: sed -i 's/\pip install dvc/\pip install dvc dvc[s3]/g' Dockerfile
 
       - name: Remove etc lines from Dockerfile
         run: sed -i '/etc/d' Dockerfile
