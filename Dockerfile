@@ -21,8 +21,7 @@ ENV PYTHONPATH=/app:$PYTHONPATH
 COPY . /starter
 
 # Install any needed packages specified in requirements.txt
-RUN pip install dvc \ 
-    dvc[s3] \
+RUN pip install dvc dvc[s3] \
     flake8 pytest \
     fastapi==0.95.1 \
     imbalanced_learn==0.7.0 \
