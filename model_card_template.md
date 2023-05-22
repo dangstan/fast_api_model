@@ -20,11 +20,15 @@ Before training, the numerical features were normalized, the categorical feature
 
 ## Evaluation Data
 
-Similar to the training data, the evaluation data underwent preprocessing steps, including normalization of numerical features, conversion of categorical features to dummy variables, and binarization of the target class.
+Similar to the training data, the evaluation data - around 25% of the original data - underwent preprocessing steps, including normalization of numerical features, conversion of categorical features to dummy variables, and binarization of the target class.
 
 ## Metrics
 
-The model was evaluated using precision, recall, and F1 score. The obtained F1 score is 0.7127.
+The model was evaluated using precision, recall, and F1 score. The obtained scores are:
+
+* precision: 0.6950281906714505
+*  recall:   0.7313915857605178
+*    f1:     0.7127463863337713
 
 ## Ethical Considerations
 
