@@ -60,6 +60,27 @@ class InputData(BaseModel):
     hours_per_week: int = Field(alias='hours-per-week')
     native_country: str = Field(alias='native-country')
 
+    class Config:
+        schema_extra = {
+            "example": {
+                'age': 58,
+                'workclass': ' Private',
+                'fnlgt': 151910,
+                'education': ' HS-grad',
+                'education-num': 9,
+                'marital-status': ' Widowed',
+                'occupation': ' Adm-clerical',
+                'relationship': ' Unmarried',
+                'race': ' White',
+                'sex': ' Female',
+                'capital-gain': 0,
+                'capital-loss': 0,
+                'hours-per-week': 40,
+                'native-country': ' United-States',
+                'salary': ' <=50K'
+            }
+        }
+
 
 # Defining the prediction endpoint with data validation
 @app.post('/predict')

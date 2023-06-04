@@ -32,8 +32,12 @@ The model was evaluated using precision, recall, and F1 score. The obtained scor
 
 ## Ethical Considerations
 
-...
+No ethical concerns.
 
 ## Caveats and Recommendations
 
-...
+The machine learning model is a grid-search optimized XGBoost model trained using KFold cross-validation and BorderlineSMOTE for oversampling. The model is trained using the script found in `ml/train_model.py`, and the trained model is saved as a serialized `.pkl` file for later use.
+
+Performance of the model on data slices (particularly for categorical features) is also assessed and outputted for review. This functionality can be found within `ml/model.py`.
+
+Unit tests for various functions in the model code can be found under the `starter` directory.
